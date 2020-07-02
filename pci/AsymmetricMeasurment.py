@@ -540,5 +540,4 @@ def Propagator(func, asymmetric_measurments= [], pars = [], N = 10000, confidenc
 	temp_obj = AsymmetricMeasurment(creation_method='by_function', data=new_data, confidence =confidence, precision=precision)
 	return temp_obj
 
-if __name__ == "__main__":
-	
+
