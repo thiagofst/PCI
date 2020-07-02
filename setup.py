@@ -17,7 +17,7 @@ setup(
     download_url = 'https://github.com/muryelgp/PCI/archive/master.zip',
     license=license,
     keywords = ['statistics', 'uncertanties', 'confidence-level'],
-    packages=['pci'],
+    packages=['PCI'],
     install_requires=[
           'numpy',
           'matplotlib',

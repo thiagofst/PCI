@@ -225,7 +225,7 @@ class AsymmetricMeasurment:
 		conf_up =(self.x_values[flag_up])[np.where((self.log_likelihood_values - d_ll)[flag_up] == np.min(abs(self.log_likelihood_values[flag_up]  - d_ll)))]
 		flag_low = self.x_values < self.me
 		conf_low =(self.x_values[flag_low])[np.where((self.log_likelihood_values - d_ll)[flag_low] == np.min(abs(self.log_likelihood_values[flag_low]  - d_ll)))]
-		return [conf_low[0], conf_up[0]]
+		return [conf_low, conf_up]
 
 	@staticmethod
 	def fit_func(x, norm, me, err_n, err_p, c):
@@ -513,9 +513,8 @@ class AsymmetricMeasurment:
 		Parameters
 		----------
 		func (function) : "<class 'function'>"
-			The function in which the errors will be propagated.
-			The need to have a very specific format, the AsymmetricMeasurment 
-			parameters need to be given as the first parameter as a (one) list,
+			The function in which the errors will be propagated needs to have a very specific format, 
+			the AsymmetricMeasurment parameters need to be given as the first parameter as a (one) list,
 			the other (float-like) parameters have to be the second parameter
 			and be given as another (one) list. The function need to return only 
 			one parameter. See an example:
@@ -569,7 +568,7 @@ class AsymmetricMeasurment:
 			raise RuntimeError("The 'asymmetric_measurments' parameters needs to be a list ({})".format(str(type(asymmetric_measurments))))
 
 		for i in range(len(asymmetric_measurments)):
-			if str(type(asymmetric_measurments[i])) != "<class 'pci.AsymmetricMeasurment.AsymmetricMeasurment'>":
+			if str(type(asymmetric_measurments[i])) != "<class 'pci.Data.AsymmetricMeasurment'>":
 				raise RuntimeError("The elements of the 'asymmetric_measurments' need to be  AsymmetricMeasurments class objects ({})".format(str(type(asymmetric_measurments[i]))))
 			n = (asymmetric_measurments[i]).N
 			if (n != (asymmetric_measurments[i-1]).N):
