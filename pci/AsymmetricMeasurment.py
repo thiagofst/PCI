@@ -537,11 +537,8 @@ class AsymmetricMeasurment:
 
 		confidence : int
 			The statistical significance of the errors given by the percentile (%) confience intervals.
-			The implemented options are 68, 90 and 95:
-				Confidence(%)	Δχ2	ΔlogL
-				68%	1.00	-0.50
-				90%	2.71	-1.36
-				95%	4.00	-2.00
+			The implemented options are 68, 90 and 95.
+			
 
 		precision: float
 			Number of bins for the histogram fit.
@@ -586,4 +583,4 @@ class AsymmetricMeasurment:
 
 
 if __name__ == "__main__":
-	
+	a=0
