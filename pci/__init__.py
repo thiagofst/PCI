@@ -1,2 +1,2 @@
-from pci.AsymmetricMeasurment import AsymmetricMeasurment
+from .Data import AsymmetricMeasurment
 
