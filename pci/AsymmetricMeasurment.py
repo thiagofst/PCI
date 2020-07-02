@@ -567,7 +567,7 @@ class AsymmetricMeasurment:
 			raise RuntimeError("The 'asymmetric_measurments' parameters needs to be a list ({})".format(str(type(asymmetric_measurments))))
 
 		for i in range(len(asymmetric_measurments)):
-			if str(type(asymmetric_measurments[i])) != "<pci.AsymmetricMeasurment.AsymmetricMeasurment'>":
+			if str(type(asymmetric_measurments[i])) != "<class 'pci.AsymmetricMeasurment.AsymmetricMeasurment'>":
 				raise RuntimeError("The elements of the 'asymmetric_measurments' need to be  AsymmetricMeasurments class objects ({})".format(str(type(asymmetric_measurments[i]))))
 			n = (asymmetric_measurments[i]).N
 			if (n != (asymmetric_measurments[i-1]).N):
