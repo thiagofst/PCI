@@ -292,7 +292,7 @@ class AsymmetricMeasurment:
 		plt.ylim([-5, 0.5])
 
 		plt.xlabel("x")
-		plt.ylabel("ln L")
+		plt.ylabel(r'$ln \ \Delta \ L$')
 
 		plt.axhline(y=self._get_const(self.conf_inter)**2 / -2, color="black", ls="--")
 
