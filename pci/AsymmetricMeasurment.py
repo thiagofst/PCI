@@ -527,10 +527,10 @@ class AsymmetricMeasurment:
 				return value 
 
 		asymmetric_measurments: list
-			The list with the asymmetric measurments (instances of the AsymmetricMeasurment class),
+			The list containing the asymmetric measurments (instances of the AsymmetricMeasurment class),
 
 		pars: list
-			The list with the float(or int)-like parameters.
+			The list containing the float(or int)-like parameters.
 
 		N: int
 			Number of Monte Carlo iterations.
