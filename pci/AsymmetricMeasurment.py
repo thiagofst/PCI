@@ -542,6 +542,11 @@ class AsymmetricMeasurment:
 
 		precision: float
 			Number of bins for the histogram fit.
+
+
+
+
+
 			Standart value is 300, for complex functions it mey be intersting to decrease (e.g 500, 1000, 5000?),
 			however it will take longer to fit the pdf.
 
