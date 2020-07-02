@@ -1,2 +1,2 @@
-from pci.AsymmetricMeasurment import AsymmetricMeasurment, Propagator
+from pci.AsymmetricMeasurment import AsymmetricMeasurment
 
