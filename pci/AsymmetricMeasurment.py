@@ -75,7 +75,7 @@ class AsymmetricMeasurment:
 			
 
 			self.norm = 1.0
-			self.norm = self.calculate_norm()
+			self.norm = self._calculate_norm()
 
 			
 			self.pdf_values = np.asarray(self.pdf(self.x_values))
@@ -87,7 +87,7 @@ class AsymmetricMeasurment:
 		elif str(self.creation_method) == 'by_function':
 			self.N = self.data.size
 
-			self.fit()
+			self._fit()
 			#self.sigma_n, self.sigma_p = self.estimate()
 
 			delta = 8*np.max([self.err_n,self.err_p])/self._get_const(self.conf_inter)
@@ -95,7 +95,7 @@ class AsymmetricMeasurment:
 			self.x_values = np.linspace(self.x_lim[0], self.x_lim[1], self.N)
 
 			self.norm = 1.0
-			self.norm = self.calculate_norm()
+			self.norm = self._calculate_norm()
 
 			
 			self.pdf_values = np.asarray(self.pdf(self.x_values))
@@ -118,19 +118,27 @@ class AsymmetricMeasurment:
 		const = c_dic[str(conf_inter)]
 		return const
 
-	def integrate(self):
+	def _integrate(self):
 		delta_x = self.x_lim[1] - self.x_lim[0]
 		c = delta_x / (self.N - 1)
 		# x_values = np.linspace(self.x_limits[0], self.x_limits[1], self.N, dtype=float)
 		area = np.sum(c * self.pdf(self.x_values))
 		return area
 
-	def calculate_norm(self):
-		area = self.integrate()
+	def _calculate_norm(self):
+		area = self._integrate()
 		norm = 1/area
 		return norm
 
 	def pdf(self, x):
+		"""
+		Measures the Probability Density Function (CDF) for a given (x) value.
+        
+        Returns
+        --------
+        pdf_x : float
+            Value of PDF at x.
+        """
 		c = self._get_const(self.conf_inter)
 		
 		par_1 = (2.0 * self.err_p * self.err_n) / ((self.err_p + self.err_n)*c)
@@ -143,6 +151,15 @@ class AsymmetricMeasurment:
 		return value
 	
 	def log_likelihood(self, x):
+		"""
+		Measures the logarithm of the likelihood (Variable Width Gaussian, from R. Barlow's 2004 paper "Asymmetric Statistical Errors") for a given (x) value.
+        
+        Returns
+        --------
+        log_L_x : float
+            Value of log_likelihood at x.
+        """
+
 		c = self._get_const(self.conf_inter)
 		par_1 = (2.0 * self.err_p * self.err_n) / ((self.err_p + self.err_n)*c)
 		par_2 = (self.err_p  - self.err_n) / ((self.err_p  + self.err_n)*c)
@@ -158,6 +175,14 @@ class AsymmetricMeasurment:
 		return cdf_values
 
 	def cdf(self, x):
+		"""
+		Measures the Cumulative Density Function (CDF) for a given (x) value.
+        
+        Returns
+        --------
+        cdf_x : float
+            Value of CDF at x.
+        """
 		cdf = interpolate.interp1d(self.x_values, self.cdf_values, kind='nearest')
 		return cdf(x)
 
@@ -167,6 +192,14 @@ class AsymmetricMeasurment:
 
 
 	def generate_random(self):
+		"""
+		Generates a random number using the probability density function of the object (see .plot_pdf() function).
+        
+        Returns
+        --------
+        n : float
+            Random number.
+        """
 		rnd_prob = np.random.uniform(self.cdf_values[0], self.cdf_values[-1])
 		n_rand = self._calculate_inverse_cdf(rnd_prob)
 		return n_rand
@@ -175,7 +208,17 @@ class AsymmetricMeasurment:
 		rnd_prob = np.random.uniform(self.cdf_values[0], self.cdf_values[-1], self.N)
 		self.data = self._calculate_inverse_cdf(rnd_prob)
 
-	def get_confidence(self, conf_inter):
+	def get_confidence(self, conf_inter=68):
+		"""
+		Gets the confidence intervals. Implemented options are 68, 90 and 95% (e.g conf_inter = 90)
+        
+        Returns
+        --------
+        conf_inter : list
+            2-size list with the x values at the selected confidence interval.
+        """
+
+
 		d_ll = self._get_const(conf_inter)**2 / -2
 		
 		flag_up = self.x_values > self.me
@@ -195,7 +238,7 @@ class AsymmetricMeasurment:
 		
 		return value
 
-	def fit(self, expected_values=None):
+	def _fit(self, expected_values=None):
 		y, x, _ = plt.hist(self.data, bins=int(self.bins))
 		plt.clf()
 		plt.close('all')
@@ -462,82 +505,82 @@ class AsymmetricMeasurment:
 		temp_obj = AsymmetricMeasurment(creation_method='by_function', data=add, confidence =self.conf_inter)
 		return temp_obj
 
+	def Propagator(func, asymmetric_measurments= [], pars = [], N = 10000, confidence = 68, precision = 300):
+		'''
+		A function to propagate erros of asymmetric measurment in complex functions,
+		it uses Monte Carlo simulations and the probability distribution functions of the AsymmetricMeasurment objects.
 
-def Propagator(func, asymmetric_measurments= [], pars = [], N = 10000, confidence = 68, precision = 300):
-	'''
-	A function to propagate erros of asymmetric measurment in complex functions,
-	it uses Monte Carlo simulations and the probability distribution functions of the AsymmetricMeasurment objects.
+		Parameters
+		----------
+		func (function) : "<class 'function'>"
+			The function in which the errors will be propagated.
+			The need to have a very specific format, the AsymmetricMeasurment 
+			parameters need to be given as the first parameter as a (one) list,
+			the other (float-like) parameters have to be the second parameter
+			and be given as another (one) list. The function need to return only 
+			one parameter. See an example:
 
-	Parameters
-	----------
-	func (function) : "<class 'function'>"
-		The function in which the errors will be propagated.
-		The need to have a very specific format, the AsymmetricMeasurment 
-		parameters need to be given as the first parameter as a (one) list,
-		the other (float-like) parameters have to be the second parameter
-		and be given as another (one) list. The function need to return only 
-		one parameter. See an example:
+			def func(asymmetric_measurments = [as1, as2,as3], parameters = [p1,p2,p3]):
+				as1, as2, as3 = asymmetric_measurments
+				p1,p2,p3 = parameters
+				value = as1 * as2 * as3 -p1 * p2 * p3
+				return value 
 
-		def func(asymmetric_measurments = [as1, as2,as3], parameters = [p1,p2,p3]):
-			as1, as2, as3 = asymmetric_measurments
-			p1,p2,p3 = parameters
-			value = as1 * as2 * as3 -p1 * p2 * p3
-			return value 
+		asymmetric_measurments: list
+			The list with the asymmetric measurments (instances of the AsymmetricMeasurment class),
 
-	asymmetric_measurments: list
-		The list with the asymmetric measurments (instances of the AsymmetricMeasurment class),
+		pars: list
+			The list with the float(or int)-like parameters.
 
-	pars: list
-		The list with the float(or int)-like parameters.
+		N: int
+			Number of Monte Carlo iterations.
 
-	N: int
-		Number of Monte Carlo iterations.
+		confidence : int
+			The statistical significance of the errors given by the percentile (%) confience intervals.
+			The implemented options are 68, 90 and 95:
+				Confidence(%)	Δχ2	ΔlogL
+				68%	1.00	-0.50
+				90%	2.71	-1.36
+				95%	4.00	-2.00
 
-	confidence : int
-		The statistical significance of the errors given by the percentile (%) confience intervals.
-		The implemented options are 68, 90 and 95:
-			Confidence(%)	Δχ2	ΔlogL
-			68%	1.00	-0.50
-			90%	2.71	-1.36
-			95%	4.00	-2.00
-
-	precision: float
-		Number of bins for the histogram fit.
-		Standart value is 300, for complex functions it mey be intersting to decrease (e.g 500, 1000, 5000?),
-		however it will take longer to fit the pdf.
-
+		precision: float
+			Number of bins for the histogram fit.
+			Standart value is 300, for complex functions it mey be intersting to decrease (e.g 500, 1000, 5000?),
+			however it will take longer to fit the pdf.
 
 
-	Returns
-	-------
-	Measurment: __main__.AsymmetricMeasurment
-		An instance of the AsymmetricMeasurment class resulted from the propagation of errors.
-	'''		
+
+		Returns
+		-------
+		Measurment: __main__.AsymmetricMeasurment
+			An instance of the AsymmetricMeasurment class resulted from the propagation of errors.
+		'''		
 
 
-	if str(type(func)) != "<class 'function'>":
-		raise RuntimeError("The 'func' parameter needs to be a function ({})".format(str(type(func))))
+		if str(type(func)) != "<class 'function'>":
+			raise RuntimeError("The 'func' parameter needs to be a function ({})".format(str(type(func))))
 
-	if len(asymmetric_measurments) == 0:
-		raise RuntimeError("The 'asymmetric_measurments' list cannot be empty")
+		if len(asymmetric_measurments) == 0:
+			raise RuntimeError("The 'asymmetric_measurments' list cannot be empty")
 
-	if str(type(asymmetric_measurments)) != "<class 'list'>":
-		raise RuntimeError("The 'asymmetric_measurments' parameters needs to be a list ({})".format(str(type(asymmetric_measurments))))
+		if str(type(asymmetric_measurments)) != "<class 'list'>":
+			raise RuntimeError("The 'asymmetric_measurments' parameters needs to be a list ({})".format(str(type(asymmetric_measurments))))
 
-	for i in range(len(asymmetric_measurments)):
-		if str(type(asymmetric_measurments[i])) != "<class '__main__.AsymmetricMeasurment'>":
-			raise RuntimeError("The elements of the 'asymmetric_measurments' need to be  AsymmetricMeasurments class objects ({})".format(str(type(asymmetric_measurments[i]))))
-		n = (asymmetric_measurments[i]).N
-		if (n != (asymmetric_measurments[i-1]).N):
-			raise RuntimeError('The size (N) of the data in all AsymmetricMeasurments objects have to be equal')
+		for i in range(len(asymmetric_measurments)):
+			if str(type(asymmetric_measurments[i])) != "<pci.AsymmetricMeasurment.AsymmetricMeasurment'>":
+				raise RuntimeError("The elements of the 'asymmetric_measurments' need to be  AsymmetricMeasurments class objects ({})".format(str(type(asymmetric_measurments[i]))))
+			n = (asymmetric_measurments[i]).N
+			if (n != (asymmetric_measurments[i-1]).N):
+				raise RuntimeError('The size (N) of the data in all AsymmetricMeasurments objects have to be equal')
 
-	if (asymmetric_measurments[0].N != N):
-		N = asymmetric_measurments[0].N
+		if (asymmetric_measurments[0].N != N):
+			N = asymmetric_measurments[0].N
 
-	as_ = [j.data for j in asymmetric_measurments]
-	new_data = func(as_, pars)
+		as_ = [j.data for j in asymmetric_measurments]
+		new_data = func(as_, pars)
 
-	temp_obj = AsymmetricMeasurment(creation_method='by_function', data=new_data, confidence =confidence, precision=precision)
-	return temp_obj
+		temp_obj = AsymmetricMeasurment(creation_method='by_function', data=new_data, confidence =confidence, precision=precision)
+		return temp_obj
+
 
 
