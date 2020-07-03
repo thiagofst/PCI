@@ -507,7 +507,7 @@ class AsymmetricMeasurment:
 
 	def Propagator(func, asymmetric_measurments= [], pars = [], N = 10000, confidence = 68, precision = 300):
 		'''
-		A function to propagate erros of asymmetric measurment in complex functions,
+		A function to propagate erros of asymmetric measurment in user-defined functions,
 		it uses Monte Carlo simulations and the probability distribution functions of the AsymmetricMeasurment objects.
 
 		Parameters
