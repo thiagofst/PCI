@@ -1,6 +1,6 @@
 # Propagation of Confidence Intervals (PCI)
 
-PCI is a package for handling measured values with asymmetric uncertainties given by their confidence intervals in which the probability distribution is not known.
+PCI is a package for handling measured values with asymmetric uncertainties given by their confidence intervals in which the probability distribution is unknown.
 
 The values and their respective confidence intervals are sampled with a pre-defined likelihood function, called "Variable Width Gaussian", 
 proposed in [R. Barlow's 2004 paper "Asymmetric Statistical Errors"](https://arxiv.org/pdf/physics/0406120.pdf).
