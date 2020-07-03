@@ -104,7 +104,7 @@ class AsymmetricMeasurment:
 			
 
 	def __str__(self):
-		output = "Value = {:.2e} ( - {:.2e} , + {:.2e} )\n({:.0f}% confidence interval)"
+		output = "Value = {:.2e} ( - {:.2e} , + {:.2e} )\n({:.0f}% confidence level)"
 		return output.format(self.me, self.err_n, self.err_p, self.conf_inter)
 
 
@@ -516,7 +516,7 @@ class AsymmetricMeasurment:
 			The function in which the errors will be propagated needs to have a very specific format, 
 			the AsymmetricMeasurment parameters need to be given as the first parameter as a (one) list,
 			the other (float-like) parameters have to be the second parameter
-			and be given as another (one) list. The function need to return only 
+			and be given as another (one) list. The function needs to return only 
 			one parameter. See an example:
 
 			def func(asymmetric_measurments = [as1, as2,as3], parameters = [p1,p2,p3]):
@@ -587,4 +587,4 @@ class AsymmetricMeasurment:
 
 
 if __name__ == "__main__":
-	a=0
+	a=AsymmetricMeasurment
