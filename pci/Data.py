@@ -109,7 +109,7 @@ class AsymmetricMeasurment:
 
 
 
-	@classmethod
+	
 	def _get_const(self,conf_inter ):
 		c_dic = {
 				'68': 1,
