@@ -1,0 +1,5 @@
+#ignoring __pychache__
+__pycache__/
+
+#ignoring ypybotebooks cheackpoints
+.ipynb_checkpoints/

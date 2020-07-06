@@ -519,7 +519,7 @@ class AsymmetricMeasurment:
 			and be given as another (one) list. The function needs to return only 
 			one parameter. See an example:
 
-			def func(asymmetric_measurments = [as1, as2,as3], parameters = [p1,p2,p3]):
+			def func(asymmetric_measurments: list, parameters: list):
 				as1, as2, as3 = asymmetric_measurments
 				p1,p2,p3 = parameters
 				value = as1 * as2 * as3 -p1 * p2 * p3
@@ -541,12 +541,7 @@ class AsymmetricMeasurment:
 
 		precision: float
 			Number of bins for the histogram fit.
-
-
-
-
-
-			Standart value is 300, for complex functions it mey be intersting to decrease (e.g 500, 1000, 5000?),
+			Standart value is 300, for complex functions it may be intersting to increase (e.g 500, 1000, 5000?),
 			however it will take longer to fit the pdf.
 
 
