@@ -28,7 +28,7 @@ pip install git+https://github.com/muryelgp/PCI.git
 ```bash
 from pci import AssymetricMeasurment as asyme
 ```
-A mesurment a with a nominal value(10) and errors(+1 -0.5) at 68% confidence level or: 
+A measurment with a nominal value of 10 and errors +1 and -0.5 at 68% confidence level or: 
 
 ![equation](https://latex.codecogs.com/gif.latex?a&space;=&space;10^{&plus;1.0}_{-0.5})
 
