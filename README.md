@@ -27,11 +27,29 @@ pip install git+https://github.com/muryelgp/PCI.git
 
 ```bash
 from pci import AssymetricMeasurment as asyme
+```
+A mesurment a with a nominal value(10) and errors(+1 -0.5) at 68% confidence level or: 
 
-#variable(measurment, err_n, err_p, confidence)
-a=asymed(10, 1, 1.5, confidence=68)
-b=asymed(30, 3, 3.5, confidence=68)
+![equation](https://latex.codecogs.com/gif.latex?a&space;=&space;10^{&plus;1.0}_{-0.5})
 
+can be instanciated by:
+
+```bash
+a=asymed(10, 0.5, 1, confidence=68)
+```
+the same way:
+
+![equation](https://latex.codecogs.com/gif.latex?b&space;=&space;30^{&plus;3.0}_{-3.5})
+
+is:
+
+```bash
+b=asymed(30, 3.5, 3, confidence=68)
+```
+Simple operations are straightforward, for example: 
+
+```bash
 c = a + b 
 ```
-Check out this [jupyter notebook](https://github.com/muryelgp/PCI/blob/master/pci/How_to.ipynb) for details and more complex examples.
+
+Check out this [jupyter notebook](https://github.com/muryelgp/PCI/blob/master/pci/How_to.ipynb) for details and more interesting examples.
