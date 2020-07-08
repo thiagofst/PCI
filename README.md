@@ -37,11 +37,10 @@ can be instanciated by:
 ```bash
 a=asymed(10, 0.5, 1, confidence=68)
 ```
-the same way:
+in the same way:
 
 ![equation](https://latex.codecogs.com/gif.latex?b&space;=&space;30^{&plus;3.0}_{-3.5})
 
-is:
 
 ```bash
 b=asymed(30, 3.5, 3, confidence=68)
