@@ -9,7 +9,7 @@ class AsymmetricMeasurment:
 	"""
 	A class for dealing with asymmetric probability distribution of parameters given by their confidence intervals.
 
-	e.g. Value = 10 ( -1, +2 ) (60% confidence interval)
+	e.g. Value = 10 ( -1, +2 ) (68% confidence interval)
 	"""
 	def __init__(self, me=10.0, err_n=1.0, err_p=1.0, N=10000, confidence = 68, precision = 500, creation_method='by_parameters', data=[]):
 		"""
@@ -275,10 +275,15 @@ class AsymmetricMeasurment:
 	def plot_pdf(self, show=True, save=False):
 
 		plt.clf()
-		plt.plot(self.x_values, self.pdf_values, color="blue")
-
-		plt.xlabel("x")
-		plt.ylabel("prob")
+		plt.plot(self.x_values, self.pdf_values, color="blue", label = r'$%.2f^{+%.2f}_{-%.2f}$  (%d%% confidence level)' % (self.me, self.err_p,self.err_n, self.conf_inter))
+		ymin,ymax = plt.ylim()
+		plt.ylim(ymin, 1.2*ymax)
+		plt.vlines(self.me, ymin =0,ymax=ymax,color = 'black')
+		plt.vlines(self.me + self.err_p, ymin =0,ymax=ymax, color = 'black', linestyle = '--')
+		plt.vlines(self.me - self.err_n, ymin =0,ymax=ymax, color = 'black',  linestyle = '--')
+		plt.legend(fontsize = 12)
+		plt.xlabel("x", fontsize=12)
+		plt.ylabel("Normalized Probability", fontsize=12)
 
 		if save:
 			plt.savefig("plot_pdf.png", dpi=300)
@@ -290,12 +295,14 @@ class AsymmetricMeasurment:
 		plt.clf()
 		plt.plot(self.x_values, self.log_likelihood(self.x_values))
 		plt.ylim([-5, 0.5])
+		
 
-		plt.xlabel("x")
-		plt.ylabel(r'$ln \ \Delta \ L$')
+		plt.xlabel("x", fontsize=14)
+		plt.ylabel(r'ln $\Delta$ L', fontsize=14)
 
-		plt.axhline(y=self._get_const(self.conf_inter)**2 / -2, color="black", ls="--")
-
+		plt.axhline(y=self._get_const(self.conf_inter)**2 / -2, color="black", ls="--", label = r"ln  $\Delta$L = "+str(((self._get_const(self.conf_inter))**2)/-2))
+		plt.axhline(y=0, color="black", label = r"ln  $\Delta$L = 0")
+		plt.legend()
 		if save:
 			plt.savefig("plot_log_likelihood.png", dpi=300)
 
@@ -505,9 +512,10 @@ class AsymmetricMeasurment:
 		temp_obj = AsymmetricMeasurment(creation_method='by_function', data=add, confidence =self.conf_inter)
 		return temp_obj
 
+	@staticmethod
 	def Propagator(func, asymmetric_measurments= [], pars = [], N = 10000, confidence = 68, precision = 300):
 		'''
-		A function to propagate erros of asymmetric measurment in user-defined functions,
+		A function to propagate errors of asymmetric measurment in user-defined functions,
 		it uses Monte Carlo simulations and the probability distribution functions of the AsymmetricMeasurment objects.
 
 		Parameters
@@ -582,4 +590,4 @@ class AsymmetricMeasurment:
 
 
 if __name__ == "__main__":
-	a=AsymmetricMeasurment
+	a=AsymmetricMeasurment(10,1,1, confidence=68)
