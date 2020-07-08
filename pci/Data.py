@@ -275,7 +275,7 @@ class AsymmetricMeasurment:
 	def plot_pdf(self, show=True, save=False):
 
 		plt.clf()
-		plt.plot(self.x_values, self.pdf_values, color="blue", label = r'$%.2f^{+%.2f}_{-%.2f}$  (%d%% confidence level)' % (self.me, self.err_p,self.err_n, self.conf_inter))
+		plt.plot(self.x_values, self.pdf_values, color="blue", label = r'$%f^{+%f}_{-%f}$  (%d%% confidence level)' % (self.me, self.err_p,self.err_n, self.conf_inter))
 		ymin,ymax = plt.ylim()
 		plt.ylim(ymin, 1.2*ymax)
 		plt.vlines(self.me, ymin =0,ymax=ymax,color = 'black')
