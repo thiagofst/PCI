@@ -30,12 +30,7 @@ from pci import AssymetricMeasurment as asyme
 ```
 A mesurment a with a nominal value(10) and errors(+1 -0.5) at 68% confidence level or: 
 
-![equation](http://latex.codecogs.com/gif.latex?O_t%3D%5Ctext%20%7B%20Onset%20event%20at%20time%20bin%20%7D%20t)
-
-```math
-a = 10^{+1.0}_{-0.5}
-```
-can be instanciated by:
+![equation](<a href="https://www.codecogs.com/eqnedit.php?latex=a&space;=&space;10^{&plus;1.0}_{-0.5}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?) can be instanciated by:
 
 ```bash
 a=asymed(10, 0.5, 1, confidence=68)
