@@ -115,7 +115,7 @@ class AsymmetricMeasurment:
 		c_dic = {
 				'68': 1,
 				'90': 1.64,
-				'95': 2
+				'95': 2,
 				'97': 2.14}
 		const = c_dic[str(conf_inter)]
 		return const
