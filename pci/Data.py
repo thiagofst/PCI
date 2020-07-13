@@ -225,9 +225,9 @@ class AsymmetricMeasurment:
 		
 		flag_up = self.x_values > self.me
 		
-		conf_up =(self.x_values)[np.where((self.log_likelihood_values[flag_up] - d_ll) == np.min((self.log_likelihood_values[flag_up]  - d_ll)))]
+		conf_up =(self.x_values)[np.where(abs(self.log_likelihood_values[flag_up] - d_ll) == np.min(abs(self.log_likelihood_values[flag_up]  - d_ll)))]
 		flag_low = self.x_values < self.me
-		conf_low =(self.x_values)[np.where((self.log_likelihood_values[flag_low] - d_ll) == np.min((self.log_likelihood_values[flag_low]  - d_ll)))]
+		conf_low =(self.x_values)[np.where(abs(self.log_likelihood_values[flag_low] - d_ll) == np.min(abs(self.log_likelihood_values[flag_low]  - d_ll)))]
 		return [conf_low, conf_up]
 
 	@staticmethod
