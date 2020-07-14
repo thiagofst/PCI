@@ -207,7 +207,7 @@ class AsymmetricMeasurment:
 		return n_rand
 
 	def _generate_data(self):
-		rnd_prob = np.random.uniform(self.cdf_values[0], self.cdf_values[-1], self.N)
+		rnd_prob = np.random.uniform(0, 1, self.N)
 		self.data = self._calculate_inverse_cdf(rnd_prob)
 
 	def get_confidence(self, conf_inter=68):
