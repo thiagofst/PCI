@@ -94,10 +94,6 @@ class AsymmetricMeasurment:
 			delta = 8*np.max([self.err_n,self.err_p])/self._get_const(self.conf_inter)
 			self.x_lim =  [self.me - delta, self.me + delta]
 			self.x_values = np.linspace(self.x_lim[0], self.x_lim[1], self.N)
-
-			self.norm = 1.0
-			self.norm = self._calculate_norm()
-
 			
 			self.pdf_values = np.asarray(self.pdf(self.x_values))
 			self.cdf_values = np.asarray(self._calculate_cdf_values())
@@ -147,7 +143,8 @@ class AsymmetricMeasurment:
 		par_2 = (self.err_p  - self.err_n) / ((self.err_p  + self.err_n)*c)
 		par_3= (-1.0/2.0) * ((self.me - x)/(par_1 + par_2*(x - self.me)))**2.0
 		
-		par_4 = self.norm / (2.0 * np.pi)**0.5
+		#par_4 = self.norm / (2.0 * np.pi)**0.5
+		par_4 = self.norm
 		value = par_4 * np.exp(par_3)
 		#print(v1, v2)
 		return value
@@ -236,38 +233,39 @@ class AsymmetricMeasurment:
 		par_1 = (2.0 * err_p * err_n) / ((err_p + err_n)*c)
 		par_2 = (err_p - err_n) / ((err_p + err_n)*c)
 		par_3 = (-1.0 / 2.0) * ((me - x) / (par_1 + par_2 * (x - me))) ** 2.0
-		par_4 = norm / (2.0 * np.pi) ** 0.5
+		#par_4 = norm / (2.0 * np.pi) ** 0.5
+		par_4 = norm 
 		value = par_4 * np.exp(par_3)
 		
 		return value
 
-	def _fit(self, expected_values=None):
-		y, x, _ = plt.hist(self.data, bins=int(self.bins))
+	def _fit(self, expected=None):
+		y, x, _ = plt.hist(self.data, bins=int(self.bins), density =True)
 		plt.clf()
 		plt.close('all')
 		x = (x[1:] + x[:-1]) / 2  # for len(x)==len(y)
 		
-		mod = None
-		max_y = max(y)
-		for i in range(len(y)):
-			if y[i] == max_y:
-				mod = x[i]
+		mod =  x[np.where(y==max(y))]
 
+
+		norm = (max(y))
+		
 		
 		min_data = min(self.data)
 		max_data = max(self.data)
-		norm = 1000.0
+		
 		c = self._get_const(self.conf_inter)
-		if not expected_values:
-			expected_values = norm, mod, (mod - min_data) * 0.1, (max_data - mod) * 0.1, c
+		if not expected:
+			expected = np.array([1, mod, ((mod - min_data) * 0.4), ((max_data - mod) * 0.4), c])
 
-		expected = (expected_values[0], expected_values[1], expected_values[2], expected_values[3], expected_values[4])
+		#expected = [expected_values[0], expected_values[1], expected_values[2], expected_values[3], expected_values[4])
+		x_scale= [1, 10**int(np.log10(abs(mod))), 10**int(np.log10(abs(((mod - min_data) * 0.4)))), 10**int(np.log10(abs(((max_data - mod) * 0.4)))),  1e-10]
 		
 		bounds = ([0, -np.inf, 0, 0, c], [np.inf, np.inf, np.inf, np.inf, c+1e-10])
-		params, cov = curve_fit(self.fit_func, x, y, expected,  bounds = bounds, method='trf')
-		self.norm = params[0]
+		params, cov = curve_fit(self.fit_func, x, y/norm, expected,  bounds = bounds, x_scale=x_scale, method='trf')
+		self.norm = params[0]*norm
 		self.me = params[1]
-		#print("params", params)
+		
 		if params[2] > 0.0:
 			self.err_n = (params[2])
 			self.err_p = (params[3])
@@ -583,8 +581,13 @@ class AsymmetricMeasurment:
 		if (asymmetric_measurments[0].N != N):
 			N = asymmetric_measurments[0].N
 
-		as_ = [j.data for j in asymmetric_measurments]
-		new_data = func(as_, pars)
+		#as_ = [j.data for j in asymmetric_measurments]
+		new_data = np.array([ func([j.data[i] for j in asymmetric_measurments], pars) for i in range((asymmetric_measurments[0]).N)])
+		#new_data = [func(as_[i], pars) for i in range((asymmetric_measurments[0]).N)]
+
+
+	
+
 
 		temp_obj = AsymmetricMeasurment(creation_method='by_function', data=new_data, confidence =confidence, precision=precision)
 		return temp_obj
@@ -594,3 +597,5 @@ class AsymmetricMeasurment:
 
 if __name__ == "__main__":
 	a=AsymmetricMeasurment(10,1,1, confidence=68)
+	b=AsymmetricMeasurment(30,1,1, confidence=68)
+	c = b/a
